@@ -41,32 +41,37 @@ class OnboardingController : UIViewController, UIScrollViewDelegate
     {
       pagination.frame = CGRectMake(0, screen.height - 50, screen.width , 50)
       pagination.numberOfPages = slides.count
-      pagination.addTarget(self, action: "swipe:", forControlEvents: .ValueChanged)
+      pagination.addTarget(self, action: #selector(self.swipe(_:)), forControlEvents: .ValueChanged)
       view.addSubview(pagination)
     }
     
-    for var i = 0; i < slides.count; ++i
+    for (i, slide) in slides.enumerate()
     {
       let offsetX = CGFloat(i) * screen.width + (screen.width * 0.1)
       let background = UIImageView(frame: CGRectMake(screen.width * CGFloat(i), 0, screen.width, screen.height))
       background.image = UIImage(named: slides[i]["image"]!)
       background.layer.zPosition = -1
       scroll.addSubview(background)
+      scroll.addSubview(Elements.createBlur(screen, x: screen.width * CGFloat(i)))
       
-      if let header = slides[i]["header"]
+      if let header = slide["header"]
       {
         let h1 = Elements.createh1(header, screen: screen, x: offsetX, y: screen.height / 2 - 20)
         h1.frame.size = CGSizeMake(screen.width * 0.8, 100)
         scroll.addSubview(h1)
       }
       
-      if let text = slides[i]["text"]
+      if let text = slide["text"]
       {
         let h2 = Elements.createH2(text, screen: screen, x: offsetX, y: screen.height / 2 + 20)
         h2.frame.size = CGSizeMake(screen.width * 0.8, 100)
         scroll.addSubview(h2)
       }
     }
+    
+    let button = Elements.createButton("Got it!", screen: screen)
+    button.addTarget(self, action: #selector(self.next), forControlEvents: .TouchUpInside)
+    view.addSubview(button)
   }
   
   func swipe(sender: AnyObject)
@@ -81,5 +86,12 @@ class OnboardingController : UIViewController, UIScrollViewDelegate
     pagination.currentPage = Int(pageNumber)
   }
   
+  func next()
+  {
+    let workshops = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Workshops")
+    self.showViewController(workshops, sender: nil)
+    
+    NSUserDefaults.standardUserDefaults().setBool(true, forKey: "userOnboarded")
+  }
   
 }

@@ -8,9 +8,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate
 
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool
   {
-    let userOnBoarded = NSUserDefaults.standardUserDefaults().boolForKey("userOnBoarded")
+    let userOnBoarded = NSUserDefaults.standardUserDefaults().boolForKey("userOnboarded")
     
-    if !userOnBoarded
+    if userOnBoarded
+    {
+      let workshops = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Workshops")
+      self.window?.rootViewController = workshops
+    }
+    else
     {
       self.window?.rootViewController = OnboardingController()
     }

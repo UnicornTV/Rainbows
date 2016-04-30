@@ -1,0 +1,6 @@
+framework module Pods_RainbowsUITests {
+  umbrella header "Pods-RainbowsUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
